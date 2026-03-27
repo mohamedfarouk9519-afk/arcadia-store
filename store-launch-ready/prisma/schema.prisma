@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String?
+  role         String    @default("admin")
+  accounts     Account[]
+  sessions     Session[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Product {
+  id               String      @id @default(cuid())
+  categoryId       String
+  category         Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name             String
+  slug             String      @unique
+  shortDescription String?
+  description      String?
+  imageUrl         String?
+  galleryJson      Json?
+  sizeGb           Float?
+  price            Float
+  oldPrice         Float?
+  isFeatured       Boolean     @default(false)
+  isActive         Boolean     @default(true)
+  stockStatus      String      @default("available")
+  sortOrder        Int         @default(0)
+  orderItems       OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([categoryId, isActive])
+  @@index([isFeatured])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerName  String
+  phone         String
+  email         String?
+  address       String?
+  notes         String?
+  paymentMethod String
+  totalPrice    Float
+  status        String      @default("pending")
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id])
+  productName  String
+  productImage String?
+  unitPrice    Float
+  quantity     Int
+  sizeGb       Float?
+  createdAt    DateTime @default(now())
+}
+
+model SiteSetting {
+  id             String   @id @default(cuid())
+  siteName       String   @default("Store Launch Ready")
+  heroTitle      String   @default("متجر رقمي أنيق وسريع")
+  heroSubtitle   String   @default("واجهة حديثة ولوحة تحكم كاملة")
+  whatsappNumber String?
+  supportEmail   String?
+  logoUrl        String?
+  primaryColor   String?  @default("#22d3ee")
+  secondaryColor String?  @default("#0f172a")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@index([sortOrder])
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  categoryId       String
+  name             String
+  slug             String           @unique
+  shortDescription String?
+  description      String?
+  imageUrl         String?
+  galleryJson      String?
+  sizeGb           Float?
+  price            Float
+  oldPrice         Float?
+  isFeatured       Boolean          @default(false)
+  isActive         Boolean          @default(true)
+  stockStatus      String           @default("available")
+  sortOrder        Int              @default(0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  orderItems       OrderItem[]
+  category         Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  variants         ProductVariant[]
+
+  @@index([isFeatured])
+  @@index([categoryId, isActive])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerName  String
+  phone         String
+  email         String?
+  address       String?
+  notes         String?
+  paymentMethod String
+  totalPrice    Float
+  status        String      @default("pending")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime
+  items         OrderItem[]
+
+  @@index([createdAt])
+  @@index([status])
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String
+  productId    String
+  productName  String
+  productImage String?
+  unitPrice    Float
+  quantity     Int
+  sizeGb       Float?
+  createdAt    DateTime @default(now())
+  product      Product  @relation(fields: [productId], references: [id])
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String?
+  role         String    @default("admin")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
+  Account      Account[]
+  Session      Session[]
+}
+
+model SiteSetting {
+  id             String   @id @default(cuid())
+  siteName       String   @default("Store Launch Ready")
+  heroTitle      String   @default("متجر رقمي أنيق وسريع")
+  heroSubtitle   String   @default("واجهة حديثة ولوحة تحكم كاملة")
+  whatsappNumber String?
+  supportEmail   String?
+  logoUrl        String?
+  primaryColor   String?  @default("#22d3ee")
+  secondaryColor String?  @default("#0f172a")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+}
+
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ProductVariant {
+  id        String   @id @default(cuid())
+  sizeGb    Int
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
