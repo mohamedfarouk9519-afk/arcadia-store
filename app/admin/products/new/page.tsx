@@ -106,24 +106,21 @@ const [variants, setVariants] = useState([
   <h3 className="text-lg font-bold text-black">الجيجات</h3>
 
   {variants.map((variant, index) => (
-    <div key={index} className="grid gap-2 md:grid-cols-3">
-      <
-      />
+  <div key={index} className="grid gap-2 md:grid-cols-3">
 
-      
+    <input
+      placeholder="الحجم GB"
+      value={variant.sizeGb}
+      onChange={(e) => {
+        const newVariants = [...variants];
+        newVariants[index].sizeGb = e.target.value;
+        setVariants(newVariants);
+      }}
+      className="w-full rounded-xl border p-3 text-black"
+    />
 
-      <input
-        placeholder="الحجم GB"
-        value={variant.sizeGb}
-        onChange={(e) => {
-          const newVariants = [...variants];
-          newVariants[index].sizeGb = e.target.value;
-          setVariants(newVariants);
-        }}
-        className="w-full rounded-xl border p-3 text-black"
-      />
-    </div>
-  ))}
+  </div>
+))}
 
   <button
     type="button"
