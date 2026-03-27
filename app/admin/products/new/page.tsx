@@ -77,16 +77,11 @@ const [variants, setVariants] = useState([
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            placeholder="اسم المنتج"
-            className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
+  placeholder="سعر المنتج"
+  className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
+  value={price}
+  onChange={(e) => setPrice(e.target.value)}
+/>
 <input
   placeholder="رابط الصورة"
   className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
