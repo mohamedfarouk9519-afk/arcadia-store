@@ -94,13 +94,7 @@ const [statusFilter, setStatusFilter] = useState("all");
   <div className="space-y-1">
     <div>{product.name}</div>
 
-    {product.variants?.length > 0 && (
-      <div className="text-xs text-gray-500">
-        {product.variants.map((variant) => (
-          <div key={variant.id}>
-            {variant.name} - {variant.sizeGb}GB - EGP {variant.price}
-          </div>
-        ))}
+    
       </div>
     )}
   </div>
