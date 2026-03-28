@@ -16,8 +16,19 @@ export async function PUT(req: Request) {
 
   const existing = await prisma.siteSetting.findFirst();
   const settings = existing
-    ? await prisma.siteSetting.update({ where: { id: existing.id }, data: parsed.data })
-    : await prisma.siteSetting.create({ data: parsed.data });
+  ? await prisma.siteSetting.update({
+      where: { id: existing.id },
+      data: {
+        ...parsed.data,
+        updatedAt: new Date(),
+      },
+    })
+  : await prisma.siteSetting.create({
+      data: {
+        ...parsed.data,
+        updatedAt: new Date(),
+      },
+    });
 
   return NextResponse.json(settings);
 }
