@@ -75,56 +75,54 @@ const [statusFilter, setStatusFilter] = useState("all");
           </thead>
 
           <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product.id} className="border-t">
-                <td className="p-4 text-black">
-                  {product.imageUrl ? (
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="h-12 w-12 rounded-lg object-cover"
-                    />
-                  ) : (
-                    "-"
-                  )}
-                </td>
+  {filteredProducts.map((product) => (
+    <tr key={product.id} className="border-t">
+      <td className="p-4 text-black">
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="h-12 w-12 rounded-lg object-cover"
+          />
+        ) : (
+          "-"
+        )}
+      </td>
 
-                <td className="p-4 text-black">
-  <div className="space-y-1">
-    <div>{product.name}</div>
+      <td className="p-4 text-black">
+        <div className="space-y-1">
+          <div>{product.name}</div>
+        </div>
+      </td>
 
-    
-      </div>
-    )}
-  </div>
-</td>
-                <td className="p-4 text-black">{product.price} EGP</td>
-                <td className="p-4 text-black">
-                  {product.category?.name || "-"}
-                </td>
+      <td className="p-4 text-black">{product.price} EGP</td>
 
-                <td className="p-4">
-                  <ToggleProductStatusButton
-                    id={product.id}
-                    isActive={product.isActive}
-                  />
-                </td>
+      <td className="p-4 text-black">
+        {product.category?.name || "-"}
+      </td>
 
-                <td className="p-4">
-                  <a
-                    href={`/admin/products/${product.id}/edit`}
-                    className="text-blue-600 underline"
-                  >
-                    تعديل
-                  </a>
-                </td>
+      <td className="p-4">
+        <ToggleProductStatusButton
+          id={product.id}
+          isActive={product.isActive}
+        />
+      </td>
 
-                <td className="p-4">
-                  <DeleteProductButton id={product.id} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
+      <td className="p-4">
+        <a
+          href={`/admin/products/${product.id}/edit`}
+          className="text-blue-600 underline"
+        >
+          تعديل
+        </a>
+      </td>
+
+      <td className="p-4">
+        <DeleteProductButton id={product.id} />
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
     </>
