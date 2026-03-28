@@ -44,11 +44,10 @@ const [statusFilter, setStatusFilter] = useState("all");
     <>
       <div className="mb-4 grid gap-3 md:grid-cols-2">
   <input
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    placeholder="ابحث باسم المنتج"
-    className="w-full rounded-xl border p-3 text-black"
-  />
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  className="..."
+/>
 
   <select
     value={statusFilter}
