@@ -1,30 +1,27 @@
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: Request, context: any) {
   try {
+    const id = context.params.id;
+
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
-    return Response.json(product);
+    return NextResponse.json(product);
   } catch (error) {
-    return Response.json({ error: "حصل خطأ" }, { status: 500 });
+    return NextResponse.json({ error: "حصل خطأ" }, { status: 500 });
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: Request, context: any) {
   try {
+    const id = context.params.id;
     const body = await req.json();
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(body.name !== undefined && { name: body.name }),
         ...(body.price !== undefined && { price: Number(body.price) }),
@@ -34,23 +31,22 @@ export async function PUT(
       },
     });
 
-    return Response.json(product);
+    return NextResponse.json(product);
   } catch (error) {
-    return Response.json({ error: "حصل خطأ" }, { status: 500 });
+    return NextResponse.json({ error: "حصل خطأ" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: Request, context: any) {
   try {
+    const id = context.params.id;
+
     await prisma.product.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
-    return Response.json({ ok: true });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    return Response.json({ error: "حصل خطأ" }, { status: 500 });
+    return NextResponse.json({ error: "حصل خطأ" }, { status: 500 });
   }
 }
