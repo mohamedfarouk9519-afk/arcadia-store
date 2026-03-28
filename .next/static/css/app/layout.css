@@ -545,9 +545,6 @@ video {
 .mt-3 {
   margin-top: 0.75rem;
 }
-.mt-4 {
-  margin-top: 1rem;
-}
 .mt-6 {
   margin-top: 1.5rem;
 }
@@ -894,9 +891,6 @@ video {
 }
 .pb-4 {
   padding-bottom: 1rem;
-}
-.pt-3 {
-  padding-top: 0.75rem;
 }
 .text-center {
   text-align: center;
