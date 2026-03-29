@@ -1,5 +1,5 @@
 
-
+export const dynamic = "force-dynamic";
 import HardSelector from "@/components/store/HardSelector";
 import { useCart } from "@/components/providers/CartProvider";
 import Link from "next/link";
