@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
 import SettingsManager from "@/components/admin/SettingsManager";
 import { prisma } from "@/lib/db";
