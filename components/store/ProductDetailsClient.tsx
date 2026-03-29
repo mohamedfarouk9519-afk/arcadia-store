@@ -16,7 +16,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
         <h1 className="mb-4 text-4xl font-black">{product.name}</h1>
         <p className="mb-6 text-slate-300">{product.description || product.shortDescription}</p>
         <div className="mb-6 flex flex-wrap gap-2">
-  {product.variants?.map((v) => (
+  {product.variants?.map((v: any) => (
     <div
       key={v.id}
       className="border rounded-lg px-4 py-2 text-sm"

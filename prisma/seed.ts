@@ -11,11 +11,12 @@ async function main() {
     where: { email: adminEmail },
     update: {},
     create: {
-      name: "Admin",
-      email: adminEmail,
-      passwordHash: adminPassword,
-      role: "admin",
-    },
+  name: "Admin",
+  email: adminEmail,
+  passwordHash: adminPassword,
+  role: "ADMIN",
+  updatedAt: new Date(),
+},
   });
 
   const categories = [

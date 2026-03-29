@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Category {
@@ -16,7 +16,7 @@ model Category {
   isActive    Boolean   @default(true)
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt DateTime @updatedAt
   products    Product[]
 
   @@index([sortOrder])
@@ -39,7 +39,7 @@ model Product {
   stockStatus      String           @default("available")
   sortOrder        Int              @default(0)
   createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  updatedAt DateTime @updatedAt
   orderItems       OrderItem[]
   category         Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   variants         ProductVariant[]
@@ -60,7 +60,7 @@ model Order {
   totalPrice    Float
   status        String      @default("pending")
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt DateTime @updatedAt
   items         OrderItem[]
 
   @@index([createdAt])
@@ -88,7 +88,7 @@ model User {
   passwordHash String?
   role         String    @default("admin")
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime
+  updatedAt DateTime @updatedAt
   Account      Account[]
   Session      Session[]
 }
@@ -104,7 +104,7 @@ model SiteSetting {
   primaryColor   String?  @default("#22d3ee")
   secondaryColor String?  @default("#0f172a")
   createdAt      DateTime @default(now())
-  updatedAt      DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Account {

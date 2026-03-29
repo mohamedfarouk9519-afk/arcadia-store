@@ -9,11 +9,14 @@ type CartItem = {
   productImage?: string;
   quantity: number;
   sizeGb: number;
+  unitPrice: number; // 
 };
 
 type CartContextType = {
   items: CartItem[];
+  total: number;
   addItem: (item: CartItem) => boolean;
+  updateQuantity: (productId: string, quantity: number) => void;
   removeItem: (productId: string) => void;
   clearCart: () => void;
 
@@ -64,6 +67,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((sum, item) => sum + item.sizeGb * item.quantity, 0);
   }, [items]);
 
+const total = useMemo(() => {
+  return items.reduce((sum, item) => sum + item.quantity, 0);
+}, [items]);
+
   const remainingGb = Math.max(capacityGb - usedGb, 0);
 
   const progressPercent = useMemo(() => {
@@ -102,6 +109,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
+const updateQuantity = (productId: string, quantity: number) => {
+  if (quantity <= 0) {
+    removeItem(productId);
+    return;
+  }
+
+  setItems((prev) =>
+    prev.map((item) =>
+      item.productId === productId
+        ? { ...item, quantity }
+        : item
+    )
+  );
+};
+
   const removeItem = (productId: string) => {
     setItems((prev) => prev.filter((item) => item.productId !== productId));
   };
@@ -111,22 +133,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        clearCart,
-        capacityGb,
-        setCapacityGb,
-        usedGb,
-        remainingGb,
-        progressPercent,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  <CartContext.Provider
+    value={{
+  items,
+  total,
+  addItem,
+  updateQuantity,
+  removeItem,
+  clearCart,
+  capacityGb,
+  setCapacityGb,
+  usedGb,
+  remainingGb,
+  progressPercent,
+}}
+  >
+    {children}
+  </CartContext.Provider>
+);
 }
 
 export function useCart() {

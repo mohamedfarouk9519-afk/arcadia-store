@@ -28,13 +28,14 @@ export default function ProductCard({ product }: { product: any }) {
           <button
             onClick={() => {
   const success = addItem({
-    productId: product.id,
-    slug: product.slug,
-    productName: product.name,
-    productImage: product.imageUrl,
-    quantity: 1,
-    sizeGb: product.sizeGb || product.variants?.[0]?.sizeGb || 0,
-  });
+  productId: product.id,
+  slug: product.slug,
+  productName: product.name,
+  productImage: product.imageUrl,
+  quantity: 1,
+  sizeGb: product.sizeGb,
+  unitPrice: product.price,
+});
 
   if (!success) {
     alert("المساحة المتبقية لا تكفي لهذا المنتج");
