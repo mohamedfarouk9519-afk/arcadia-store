@@ -8,13 +8,11 @@ export default function NewProductPage() {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-const [imageUrl, setImageUrl] = useState("");
-const [variants, setVariants] = useState([
-  { sizeGb: "" }
-]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [variants, setVariants] = useState([{ sizeGb: "" }]);
 
   const [categories, setCategories] = useState<any[]>([]);
-  const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,45 +28,43 @@ const [variants, setVariants] = useState([
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  try {
-    const cleanVariants = variants
-      .filter((v) => v.sizeGb)
-      
+    try {
+      const cleanVariants = variants.filter((v) => v.sizeGb);
 
-    const res = await fetch("/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        price: Number(price),
-        imageUrl,
-        categoryId,
-        variants: cleanVariants,
-      }),
-    });
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          price: Number(price),
+          imageUrl,
+          categoryId,
+          variants: cleanVariants,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.error || "حصل خطأ أثناء الإضافة");
+      if (!res.ok) {
+        setError(data.error || "حصل خطأ أثناء الإضافة");
+        setLoading(false);
+        return;
+      }
+
+      router.push("/admin/products");
+      router.refresh();
+    } catch (error) {
+      setError("حصل خطأ أثناء الإضافة");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/admin/products");
-    router.refresh();
-  } catch (error) {
-    setError("حصل خطأ أثناء الإضافة");
-  } finally {
-    setLoading(false);
   }
-}
 
   return (
     <main className="min-h-screen bg-slate-100 p-8" dir="rtl">
@@ -77,17 +73,25 @@ const [variants, setVariants] = useState([
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
-  placeholder="سعر المنتج"
+  placeholder="اسم المنتج"
   className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
-  value={price}
-  onChange={(e) => setPrice(e.target.value)}
+  value={name}
+  onChange={(e) => setName(e.target.value)}
 />
-<input
-  placeholder="رابط الصورة"
+
+          <input
+  placeholder="اسم المنتج"
   className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
-  value={imageUrl}
-  onChange={(e) => setImageUrl(e.target.value)}
+  value={name}
+  onChange={(e) => setName(e.target.value)}
 />
+
+          <input
+            placeholder="رابط الصورة"
+            className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+          />
 
           <select
             className="w-full rounded-xl border p-3 text-black"
@@ -102,36 +106,34 @@ const [variants, setVariants] = useState([
           </select>
 
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
-<div className="mt-6 space-y-3">
-  <h3 className="text-lg font-bold text-black">الجيجات</h3>
 
-  {variants.map((variant, index) => (
-  <div key={index} className="grid gap-2 md:grid-cols-3">
+          <div className="mt-6 space-y-3">
+            <h3 className="text-lg font-bold text-black">الجيجات</h3>
 
-    <input
-      placeholder="الحجم GB"
-      value={variant.sizeGb}
-      onChange={(e) => {
-        const newVariants = [...variants];
-        newVariants[index].sizeGb = e.target.value;
-        setVariants(newVariants);
-      }}
-      className="w-full rounded-xl border p-3 text-black"
-    />
+            {variants.map((variant, index) => (
+              <div key={index} className="grid gap-2 md:grid-cols-3">
+                <input
+                  placeholder="الحجم GB"
+                  value={variant.sizeGb}
+                  onChange={(e) => {
+                    const newVariants = [...variants];
+                    newVariants[index].sizeGb = e.target.value;
+                    setVariants(newVariants);
+                  }}
+                  className="w-full rounded-xl border p-3 text-black"
+                />
+              </div>
+            ))}
 
-  </div>
-))}
+            <button
+              type="button"
+              onClick={() => setVariants([...variants, { sizeGb: "" }])}
+              className="rounded-xl bg-blue-600 px-4 py-2 text-white"
+            >
+              + إضافة جيجا
+            </button>
+          </div>
 
-  <button
-    type="button"
-    onClick={() =>
-      setVariants([...variants, { sizeGb: "" }])
-    }
-    className="rounded-xl bg-blue-600 px-4 py-2 text-white"
-  >
-    + إضافة جيجا
-  </button>
-</div>
           <button
             type="submit"
             className="w-full rounded-xl bg-green-600 p-3 text-white"

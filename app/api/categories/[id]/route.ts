@@ -9,7 +9,7 @@ export async function PUT(req: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = context.params.id;
+    const { id } = await context.params;
     const body = await req.json();
     const parsed = categorySchema.safeParse(body);
 
@@ -38,7 +38,7 @@ export async function DELETE(req: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = context.params.id;
+    const { id } = await context.params;
 
     const products = await prisma.product.findMany({
       where: { categoryId: id },
