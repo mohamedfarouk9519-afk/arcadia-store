@@ -6,17 +6,22 @@ import CategoriesManager from "@/components/admin/CategoriesManager";
 import { prisma } from "@/lib/db";
 
 export default async function AdminCategoriesPage() {
-const cookieStore = await cookies();
-const isAdmin = cookieStore.get("admin_auth")?.value === "true";
+  const cookieStore = cookies(); // ✅ بدون await
+  const isAdmin = cookieStore.get("admin_auth")?.value === "true";
 
-if (!isAdmin) {
-  redirect("/");
-}
-  const categories = await prisma.category.findMany({ orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }] });
+  if (!isAdmin) {
+    redirect("/");
+  }
+
+  const categories = await prisma.category.findMany({
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+  });
 
   return (
     <AdminShell title="إدارة الأقسام">
-      <CategoriesManager initialCategories={JSON.parse(JSON.stringify(categories))} />
+      <CategoriesManager
+        initialCategories={JSON.parse(JSON.stringify(categories))}
+      />
     </AdminShell>
   );
 }
