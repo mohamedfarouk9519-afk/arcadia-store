@@ -14,12 +14,12 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    if (!body.name || !body.price) {
-      return Response.json(
-        { error: "اسم المنتج والسعر مطلوبان" },
-        { status: 400 }
-      );
-    }
+    if (!name) {
+  return NextResponse.json(
+    { error: "اسم المنتج مطلوب" },
+    { status: 400 }
+  );
+}
 
     const firstCategory = await prisma.category.findFirst({
       orderBy: { createdAt: "asc" },
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   data: {
     name: body.name,
     slug: `${slugify(body.name)}-${Date.now()}`,
-    price: Number(body.price),
+    price: 0,,
     shortDescription: body.name,
     description: body.name,
     imageUrl: body.imageUrl || "",
