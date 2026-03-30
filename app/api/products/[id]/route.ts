@@ -92,12 +92,17 @@ export async function DELETE(req: Request, context: any) {
 
     const id = context.params.id;
 
-    // حذف آمن: نخفي المنتج بدل الحذف النهائي
-    // عشان لو عليه علاقات في قاعدة البيانات مايحصلش فشل
-    await prisma.product.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    await prisma.$transaction([
+      prisma.orderItem.deleteMany({
+        where: { productId: id },
+      }),
+      prisma.productVariant.deleteMany({
+        where: { productId: id },
+      }),
+      prisma.product.delete({
+        where: { id },
+      }),
+    ]);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
