@@ -1,4 +1,6 @@
+import Link from "next/link";
 import LogoutButton from "@/components/shared/LogoutButton";
+
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
