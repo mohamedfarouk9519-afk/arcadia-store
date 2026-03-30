@@ -13,24 +13,36 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleSecretClick = () => {
-    setClickCount((prev) => {
-      const newCount = prev + 1;
+  setClickCount((prev) => {
+    const newCount = prev + 1;
 
-      if (newCount === 5) {
-        const password = prompt("Enter admin password");
+    if (newCount === 5) {
+      const password = prompt("Enter admin password");
 
-        if (password === "859410") {
+      fetch("/api/admin-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
+        .then(() => {
           router.push("/admin");
-        } else {
+        })
+        .catch(() => {
           alert("Wrong password");
-        }
+        });
 
-        return 0;
-      }
+      return 0;
+    }
 
-      return newCount;
-    });
-  };
+    return newCount;
+  });
+};
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
