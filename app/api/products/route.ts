@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    if (!name) {
+    if (!body.name) {
   return NextResponse.json(
     { error: "اسم المنتج مطلوب" },
     { status: 400 }
