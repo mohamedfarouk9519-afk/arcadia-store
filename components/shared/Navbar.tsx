@@ -19,7 +19,7 @@ export default function Navbar() {
       if (newCount === 5) {
         const password = prompt("Enter admin password");
 
-        if (password === "123456") {
+        if (password === "859410") {
           router.push("/admin");
         } else {
           alert("Wrong password");
