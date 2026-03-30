@@ -17,7 +17,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="rounded-xl bg-red-500 px-4 py-2 text-white font-bold"
+      className="rounded-xl bg-red-500 px-4 py-2 text-white font-bold border-2 border-black"
     >
       تسجيل الخروج
     </button>
