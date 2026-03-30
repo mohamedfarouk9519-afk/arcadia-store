@@ -10,7 +10,8 @@ export async function PUT(req: Request, context: any) {
     }
 
     const id = context.params.id;
-    const parsed = categorySchema.safeParse(await req.json());
+    const body = await req.json();
+    const parsed = categorySchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -46,30 +47,34 @@ export async function DELETE(req: Request, context: any) {
 
     const productIds = products.map((p) => p.id);
 
-    await prisma.$transaction(async (tx) => {
-      if (productIds.length > 0) {
-        await tx.orderItem.deleteMany({
-          where: {
-            productId: { in: productIds },
+    if (productIds.length > 0) {
+      await prisma.orderItem.deleteMany({
+        where: {
+          productId: {
+            in: productIds,
           },
-        });
-
-        await tx.productVariant.deleteMany({
-          where: {
-            productId: { in: productIds },
-          },
-        });
-
-        await tx.product.deleteMany({
-          where: {
-            id: { in: productIds },
-          },
-        });
-      }
-
-      await tx.category.delete({
-        where: { id },
+        },
       });
+
+      await prisma.productVariant.deleteMany({
+        where: {
+          productId: {
+            in: productIds,
+          },
+        },
+      });
+
+      await prisma.product.deleteMany({
+        where: {
+          id: {
+            in: productIds,
+          },
+        },
+      });
+    }
+
+    await prisma.category.delete({
+      where: { id },
     });
 
     return NextResponse.json({ ok: true });
