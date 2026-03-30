@@ -20,7 +20,9 @@ export default async function AdminPage() {
     <main className="min-h-screen bg-slate-100 p-8" dir="rtl">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-center justify-between">
-  <h1 className="text-3xl font-bold text-slate-900">لوحة التحكم</h1>
+  <h1 className="text-3xl font-bold text-slate-900">
+    لوحة التحكم
+  </h1>
 
   <div className="flex items-center gap-3">
     <Link
