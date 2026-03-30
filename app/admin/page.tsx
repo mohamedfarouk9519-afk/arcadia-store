@@ -27,7 +27,9 @@ export default async function AdminPage() {
               إدارة المنتجات
             </Link>
 
-            <LogoutButton />
+            <button className="rounded-xl bg-red-500 px-4 py-2 text-white font-bold border-2 border-black">
+  تسجيل الخروج
+</button>
           </div>
         </div>
 
