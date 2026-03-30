@@ -79,12 +79,6 @@ export default function NewProductPage() {
   onChange={(e) => setName(e.target.value)}
 />
 
-          <input
-  placeholder="اسم المنتج"
-  className="w-full rounded-xl border p-3 text-black placeholder:text-slate-400"
-  value={name}
-  onChange={(e) => setName(e.target.value)}
-/>
 
           <input
             placeholder="رابط الصورة"
