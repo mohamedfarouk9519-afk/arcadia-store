@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   data: {
     name: body.name,
     slug: `${slugify(body.name)}-${Date.now()}`,
-    price: 0,,
+    price: 0,
     shortDescription: body.name,
     description: body.name,
     imageUrl: body.imageUrl || "",
