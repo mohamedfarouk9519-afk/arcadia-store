@@ -1,8 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import AdminShell from "@/components/admin/AdminShell";
 import OrdersManager from "@/components/admin/OrdersManager";
 import { prisma } from "@/lib/db";
 
 export default async function AdminOrdersPage() {
+const cookieStore = cookies();
+const isAdmin = cookieStore.get("admin_auth")?.value === "true";
+
+if (!isAdmin) {
+  redirect("/");
+}
   const orders = await prisma.order.findMany({ include: { items: true }, orderBy: { createdAt: "desc" } });
 
   return (

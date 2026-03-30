@@ -1,8 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import AdminProductsTable from "@/components/AdminProductsTable";
 
 export default async function AdminProductsPage() {
+const cookieStore = cookies();
+const isAdmin = cookieStore.get("admin_auth")?.value === "true";
+
+if (!isAdmin) {
+  redirect("/");
+}
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
     include: {

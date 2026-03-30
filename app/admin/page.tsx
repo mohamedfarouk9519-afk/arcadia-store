@@ -1,7 +1,18 @@
-export const dynamic = "force-dynamic";
-import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function AdminPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  const cookieStore = cookies();
+  const isAdmin = cookieStore.get("admin_auth")?.value === "true";
+
+  if (!isAdmin) {
+    redirect("/");
+  }
+
+  // باقي الكود...
+}
   return (
     <main className="min-h-screen bg-slate-100 p-8" dir="rtl">
       <div className="mx-auto max-w-6xl">

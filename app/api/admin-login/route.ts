@@ -4,7 +4,17 @@ export async function POST(req: Request) {
   const { password } = await req.json();
 
   if (password === process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true });
+
+    response.cookies.set("admin_auth", "true", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60, // ساعة
+    });
+
+    return response;
   }
 
   return NextResponse.json({ success: false }, { status: 401 });
