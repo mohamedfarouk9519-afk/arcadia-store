@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     const product = await prisma.product.create({
       data: {
         name: body.name,
-        slug: ${slugify(body.name)}-${Date.now()},
+        slug: `${slugify(body.name)}-${Date.now()}`,
         shortDescription: body.shortDescription || body.name,
         description: body.description || body.name,
         imageUrl: body.imageUrl || "",
