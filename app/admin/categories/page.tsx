@@ -6,8 +6,8 @@ import CategoriesManager from "@/components/admin/CategoriesManager";
 import { prisma } from "@/lib/db";
 
 export default async function AdminCategoriesPage() {
-  const cookieStore = cookies(); // ✅ بدون await
-  const isAdmin = cookieStore.get("admin_auth")?.value === "true";
+  const cookieStore = await cookies();
+const isAdmin = cookieStore.get("admin_auth")?.value === "true";
 
   if (!isAdmin) {
     redirect("/");
