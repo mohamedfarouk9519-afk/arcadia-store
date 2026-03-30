@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import AdminProductsTable from "@/components/AdminProductsTable";
 
 export default async function AdminProductsPage() {
-const cookieStore = cookies();
+const cookieStore = await cookies();
 const isAdmin = cookieStore.get("admin_auth")?.value === "true";
 
 if (!isAdmin) {

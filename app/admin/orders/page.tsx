@@ -6,7 +6,7 @@ import OrdersManager from "@/components/admin/OrdersManager";
 import { prisma } from "@/lib/db";
 
 export default async function AdminOrdersPage() {
-const cookieStore = cookies();
+const cookieStore = await cookies();
 const isAdmin = cookieStore.get("admin_auth")?.value === "true";
 
 if (!isAdmin) {

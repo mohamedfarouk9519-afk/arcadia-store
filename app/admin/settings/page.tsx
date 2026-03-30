@@ -7,7 +7,7 @@ import SettingsManager from "@/components/admin/SettingsManager";
 import { prisma } from "@/lib/db";
 
 export default async function AdminSettingsPage() {
-const cookieStore = cookies();
+const cookieStore = await cookies();
 const isAdmin = cookieStore.get("admin_auth")?.value === "true";
 
 if (!isAdmin) {
