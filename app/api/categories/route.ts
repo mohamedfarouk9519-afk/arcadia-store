@@ -20,9 +20,9 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     // حماية
-    if (!(await isAdminAuthenticated())) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // if (!(await isAdminAuthenticated())) {
+//   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+// }
 
     const body = await req.json();
 
