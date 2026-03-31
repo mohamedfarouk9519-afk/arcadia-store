@@ -28,8 +28,8 @@ export default function ProductCard({ product }: { product: Product }) {
       : product.sizeGb ?? null;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-800 shadow-md">
-      <div className="relative h-[180px] w-full overflow-hidden bg-slate-700">
+    <div className="max-w-[220px] mx-auto overflow-hidden rounded-2xl border border-white/10 bg-slate-800 shadow-md">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-700">
         <img
           src={product.imageUrl || "/placeholder.jpg"}
           alt={product.name}
