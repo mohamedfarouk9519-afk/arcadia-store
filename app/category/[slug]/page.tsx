@@ -32,7 +32,7 @@ export default async function CategoryPage({
         <p className="mt-3 max-w-3xl text-slate-300">{category.description}</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
         {category.products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

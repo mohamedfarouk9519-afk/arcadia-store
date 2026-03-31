@@ -28,8 +28,8 @@ export default function ProductCard({ product }: { product: Product }) {
       : product.sizeGb ?? null;
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-800 shadow-lg">
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-700">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-800 shadow-md">
+      <div className="relative h-[180px] w-full overflow-hidden bg-slate-700">
         <img
           src={product.imageUrl || "/placeholder.jpg"}
           alt={product.name}
@@ -37,20 +37,19 @@ export default function ProductCard({ product }: { product: Product }) {
         />
 
         {firstSize ? (
-          <div className="absolute left-3 top-3 rounded-full bg-cyan-400 px-3 py-1 text-sm font-bold text-slate-900 shadow">
+          <div className="absolute left-2 top-2 rounded-full bg-cyan-400 px-2 py-1 text-xs font-bold text-slate-900 shadow">
             {firstSize} GB
           </div>
         ) : null}
       </div>
 
-      <div className="space-y-3 p-4 text-center">
-        <h3 className="text-xl font-bold text-white">{product.name}</h3>
+      <div className="space-y-2 p-3 text-center">
+        <h3 className="text-sm font-bold text-white line-clamp-2">
+          {product.name}
+        </h3>
 
-        <p className="line-clamp-2 text-sm text-slate-300">
-          {product.shortDescription || product.name}
-        </p>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           <button
             onClick={() => {
               const success = addItem({
@@ -67,17 +66,12 @@ export default function ProductCard({ product }: { product: Product }) {
                 alert("المساحة المتبقية لا تكفي لهذا المنتج");
               }
             }}
-            className="rounded-2xl bg-cyan-400 px-4 py-3 font-semibold text-slate-900"
+            className="rounded-xl bg-cyan-400 px-2 py-2 text-xs font-semibold text-slate-900"
           >
             أضف للسلة
           </button>
 
-          <Link
-            href={`/products/${product.slug}`}
-            className="rounded-2xl border border-white/15 bg-slate-700 px-4 py-3 text-center font-semibold text-white"
-          >
-            التفاصيل
-          </Link>
+          
         </div>
       </div>
     </div>
