@@ -84,28 +84,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addItem = (item: CartItem) => {
+    const exists = items.find(
+      (x) => x.productId === item.productId && x.sizeGb === item.sizeGb
+    );
+
+    if (exists) {
+      return false;
+    }
+
     const requiredGb = item.sizeGb * item.quantity;
 
     if (usedGb + requiredGb > capacityGb) {
       return false;
     }
 
-    setItems((prev) => {
-      const existing = prev.find(
-        (x) => x.productId === item.productId && x.sizeGb === item.sizeGb
-      );
-
-      if (existing) {
-        return prev.map((x) =>
-          x.productId === item.productId && x.sizeGb === item.sizeGb
-            ? { ...x, quantity: x.quantity + item.quantity }
-            : x
-        );
-      }
-
-      return [...prev, item];
-    });
-
+    setItems((prev) => [...prev, item]);
     return true;
   };
 

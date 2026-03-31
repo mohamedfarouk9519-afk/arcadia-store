@@ -11,8 +11,12 @@ export default function CartSummary() {
     return (
       <div className="card text-center">
         <h2 className="mb-3 text-2xl font-black">السلة فارغة</h2>
-        <p className="mb-5 text-slate-300">ابدأ بإضافة منتجات من الصفحة الرئيسية أو الأقسام.</p>
-        <Link href="/" className="btn-primary">اذهب للتسوق</Link>
+        <p className="mb-5 text-slate-300">
+          ابدأ بإضافة منتجات من الصفحة الرئيسية أو الأقسام.
+        </p>
+        <Link href="/" className="btn-primary">
+          اذهب للتسوق
+        </Link>
       </div>
     );
   }
@@ -20,36 +24,74 @@ export default function CartSummary() {
   return (
     <div className="space-y-5">
       {items.map((item) => (
-        <div key={item.productId} className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div
+          key={`${item.productId}-${item.sizeGb}`}
+          className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+        >
           <div className="flex items-center gap-4">
-            <img src={item.productImage || "https://placehold.co/160x120?text=Item"} alt={item.productName} className="h-24 w-32 rounded-2xl object-cover" />
+            <div className="relative">
+              <button
+                onClick={() => removeItem(item.productId)}
+                className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow transition hover:bg-red-700"
+                title="حذف المنتج"
+              >
+                ×
+              </button>
+
+              <img
+                src={item.productImage || "https://placehold.co/160x120?text=Item"}
+                alt={item.productName}
+                className="h-24 w-32 rounded-2xl object-cover"
+              />
+            </div>
+
             <div>
-              <div className="text-lg font-bold">
-  {item.productName} - {item.sizeGb} GB
-</div>
-              <div className="text-sm text-slate-400">{formatPrice(item.unitPrice)} × {item.quantity}</div>
+              <div className="text-lg font-bold text-white">
+                {item.productName}
+              </div>
+              <div className="text-sm text-slate-300">{item.sizeGb} GB</div>
+              <div className="text-sm text-slate-400">
+                {formatPrice(item.unitPrice)} × {item.quantity}
+              </div>
             </div>
           </div>
+
           <div className="flex items-center gap-3">
             <input
               type="number"
               min={1}
               value={item.quantity}
-              onChange={(e) => updateQuantity(item.productId, Number(e.target.value))}
+              onChange={(e) =>
+                updateQuantity(item.productId, Number(e.target.value))
+              }
               className="input w-24"
             />
-            <button onClick={() => removeItem(item.productId)} className="btn-secondary">حذف</button>
+
+            <button
+              onClick={() => removeItem(item.productId)}
+              className="btn-secondary"
+            >
+              حذف
+            </button>
           </div>
         </div>
       ))}
+
       <div className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="text-sm text-slate-400">الإجمالي النهائي</div>
-          <div className="text-3xl font-black text-cyan-300">{formatPrice(total)}</div>
+          <div className="text-3xl font-black text-cyan-300">
+            {formatPrice(total)}
+          </div>
         </div>
+
         <div className="flex gap-3">
-          <button onClick={clearCart} className="btn-secondary">تفريغ السلة</button>
-          <Link href="/checkout" className="btn-primary">متابعة الطلب</Link>
+          <button onClick={clearCart} className="btn-secondary">
+            تفريغ السلة
+          </button>
+          <Link href="/checkout" className="btn-primary">
+            متابعة الطلب
+          </Link>
         </div>
       </div>
     </div>
