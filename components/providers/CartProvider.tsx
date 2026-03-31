@@ -1,162 +1,84 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useCart } from "../providers/CartProvider";
 
-type CartItem = {
-  productId: string;
-  slug: string;
-  productName: string;
-  productImage?: string;
-  quantity: number;
+type Variant = {
+  id?: string;
   sizeGb: number;
-  unitPrice: number; // 
 };
 
-type CartContextType = {
-  items: CartItem[];
-  total: number;
-  addItem: (item: CartItem) => boolean;
-  updateQuantity: (productId: string, quantity: number) => void;
-  removeItem: (productId: string) => void;
-  clearCart: () => void;
-
-  capacityGb: number;
-  setCapacityGb: (value: number) => void;
-
-  usedGb: number;
-  remainingGb: number;
-  progressPercent: number;
+type Product = {
+  id: string;
+  name: string;
+  imageUrl?: string | null;
+  shortDescription?: string | null;
+  slug: string;
+  price: number;
+  variants?: Variant[];
 };
 
-const CartContext = createContext<CartContextType | null>(null);
+export default function ProductCard({ product }: { product: Product }) {
+  const { addItem } = useCart();
 
-const CART_STORAGE_KEY = "hard-cart-items";
-const CAPACITY_STORAGE_KEY = "hard-cart-capacity";
-
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [capacityGb, setCapacityGbState] = useState<number>(100);
-
-  useEffect(() => {
-    const savedItems = localStorage.getItem(CART_STORAGE_KEY);
-    const savedCapacity = localStorage.getItem(CAPACITY_STORAGE_KEY);
-
-    if (savedItems) {
-      try {
-        setItems(JSON.parse(savedItems));
-      } catch {}
-    }
-
-    if (savedCapacity) {
-      const parsed = Number(savedCapacity);
-      if (!Number.isNaN(parsed) && parsed > 0) {
-        setCapacityGbState(parsed);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
-
-  useEffect(() => {
-    localStorage.setItem(CAPACITY_STORAGE_KEY, String(capacityGb));
-  }, [capacityGb]);
-
-  const usedGb = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.sizeGb * item.quantity, 0);
-  }, [items]);
-
-const total = useMemo(() => {
-  return items.reduce((sum, item) => sum + item.quantity, 0);
-}, [items]);
-
-  const remainingGb = Math.max(capacityGb - usedGb, 0);
-
-  const progressPercent = useMemo(() => {
-    if (!capacityGb) return 0;
-    return Math.min((usedGb / capacityGb) * 100, 100);
-  }, [usedGb, capacityGb]);
-
-  const setCapacityGb = (value: number) => {
-    setItems([]);
-    setCapacityGbState(value);
-  };
-
-  const addItem = (item: CartItem) => {
-    const requiredGb = item.sizeGb * item.quantity;
-
-    if (usedGb + requiredGb > capacityGb) {
-      return false;
-    }
-
-    setItems((prev) => {
-      const existing = prev.find(
-        (x) => x.productId === item.productId && x.sizeGb === item.sizeGb
-      );
-
-      if (existing) {
-        return prev.map((x) =>
-          x.productId === item.productId && x.sizeGb === item.sizeGb
-            ? { ...x, quantity: x.quantity + item.quantity }
-            : x
-        );
-      }
-
-      return [...prev, item];
-    });
-
-    return true;
-  };
-
-const updateQuantity = (productId: string, quantity: number) => {
-  if (quantity <= 0) {
-    removeItem(productId);
-    return;
-  }
-
-  setItems((prev) =>
-    prev.map((item) =>
-      item.productId === productId
-        ? { ...item, quantity }
-        : item
-    )
-  );
-};
-
-  const removeItem = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.productId !== productId));
-  };
-
-  const clearCart = () => {
-    setItems([]);
-  };
+  const firstSize =
+    product.variants && product.variants.length > 0
+      ? product.variants[0].sizeGb
+      : null;
 
   return (
-  <CartContext.Provider
-    value={{
-  items,
-  total,
-  addItem,
-  updateQuantity,
-  removeItem,
-  clearCart,
-  capacityGb,
-  setCapacityGb,
-  usedGb,
-  remainingGb,
-  progressPercent,
-}}
-  >
-    {children}
-  </CartContext.Provider>
-);
-}
+    <div className="group relative overflow-hidden rounded-2xl shadow-lg">
+      <div className="relative h-[300px] w-full">
+        <img
+          src={product.imageUrl || "/placeholder.jpg"}
+          alt={product.name}
+          className="h-full w-full object-cover"
+        />
 
-export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) {
-    throw new Error("useCart must be used within CartProvider");
-  }
-  return ctx;
+        <div className="absolute inset-0 bg-black/40 transition group-hover:bg-black/50" />
+
+        {firstSize && (
+          <div className="absolute left-3 top-3 rounded-full bg-cyan-400 px-3 py-1 text-xs font-bold text-black shadow">
+            {firstSize} GB
+          </div>
+        )}
+
+        <div className="absolute bottom-16 left-0 right-0 px-2 text-center">
+          <h3 className="line-clamp-2 text-lg font-bold text-white">
+            {product.name}
+          </h3>
+        </div>
+
+        <div className="absolute bottom-3 left-3 right-3 flex gap-2">
+          <button
+            onClick={() => {
+              const success = addItem({
+                productId: product.id,
+                slug: product.slug,
+                productName: product.name,
+                productImage: product.imageUrl || "",
+                quantity: 1,
+                sizeGb: firstSize || 0,
+                unitPrice: product.price,
+              });
+
+              if (!success) {
+                alert("المساحة غير كافية");
+              }
+            }}
+            className="flex-1 rounded-xl bg-cyan-500 py-2 font-semibold text-black hover:bg-cyan-600"
+          >
+            أضف للسلة
+          </button>
+
+          <Link
+            href={/products/${product.slug}}
+            className="flex-1 rounded-xl border border-white/30 py-2 text-center text-white hover:bg-white/10"
+          >
+            التفاصيل
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

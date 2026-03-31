@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/components/CartProvider";
+import { useCart } from "../providers/CartProvider";
 
 type Variant = {
   id?: string;
