@@ -1,50 +1,83 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/components/providers/CartProvider";
+import { useCart } from "@/components/CartProvider";
 
+type Variant = {
+  id?: string;
+  sizeGb: number;
+};
 
-export default function ProductCard({ product }: { product: any }) {
+type Product = {
+  id: string;
+  name: string;
+  imageUrl?: string | null;
+  shortDescription?: string | null;
+  slug: string;
+  price: number;
+  sizeGb?: number | null;
+  variants?: Variant[];
+};
+
+export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
 
+  const firstSize =
+    product.variants && product.variants.length > 0
+      ? product.variants[0].sizeGb
+      : product.sizeGb ?? null;
+
   return (
-    <div className="overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-2xl shadow-cyan-950/10 backdrop-blur">
-      <img
-        src={product.imageUrl || "https://placehold.co/800x560?text=Product"}
-        alt={product.name}
-        className="h-56 w-full object-cover"
-      />
-      <div className="p-5">
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <h3 className="text-lg font-bold text-white">{product.name}</h3>
-          {product.sizeGb ? <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">{product.sizeGb} GB</span> : null}
-        </div>
-        <p className="mb-4 text-sm leading-6 text-slate-300">{product.shortDescription || product.description}</p>
-        
-        <div className="flex gap-3">
-          <Link href={`/product/${product.slug}`} className="btn-secondary flex-1">
-            التفاصيل
-          </Link>
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-800 shadow-lg">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-700">
+        <img
+          src={product.imageUrl || "/placeholder.jpg"}
+          alt={product.name}
+          className="h-full w-full object-cover"
+        />
+
+        {firstSize ? (
+          <div className="absolute left-3 top-3 rounded-full bg-cyan-400 px-3 py-1 text-sm font-bold text-slate-900 shadow">
+            {firstSize} GB
+          </div>
+        ) : null}
+      </div>
+
+      <div className="space-y-3 p-4 text-center">
+        <h3 className="text-xl font-bold text-white">{product.name}</h3>
+
+        <p className="line-clamp-2 text-sm text-slate-300">
+          {product.shortDescription || product.name}
+        </p>
+
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => {
-  const success = addItem({
-  productId: product.id,
-  slug: product.slug,
-  productName: product.name,
-  productImage: product.imageUrl,
-  quantity: 1,
-  sizeGb: product.sizeGb,
-  unitPrice: product.price,
-});
+              const success = addItem({
+                productId: product.id,
+                slug: product.slug,
+                productName: product.name,
+                productImage: product.imageUrl || "",
+                quantity: 1,
+                sizeGb: firstSize ?? 0,
+                unitPrice: product.price ?? 0,
+              });
 
-  if (!success) {
-    alert("المساحة المتبقية لا تكفي لهذا المنتج");
-  }
-}}
-            className="btn-primary flex-1"
+              if (!success) {
+                alert("المساحة المتبقية لا تكفي لهذا المنتج");
+              }
+            }}
+            className="rounded-2xl bg-cyan-400 px-4 py-3 font-semibold text-slate-900"
           >
             أضف للسلة
           </button>
+
+          <Link
+            href={`/products/${product.slug}`}
+            className="rounded-2xl border border-white/15 bg-slate-700 px-4 py-3 text-center font-semibold text-white"
+          >
+            التفاصيل
+          </Link>
         </div>
       </div>
     </div>
