@@ -33,13 +33,14 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = () => {
     const success = addItem({
-      productId: product.id,
-      slug: product.slug,
-      productName: product.name,
-      productImage: product.imageUrl || "",
-      quantity: 1,
-      sizeGb: firstSize ?? 0,
-    });
+  productId: product.id,
+  slug: product.slug,
+  productName: product.name,
+  productImage: product.imageUrl || "",
+  quantity: 1,
+  sizeGb: firstSize ?? 0,
+  unitPrice: product.price ?? 0, //
+});
 
     if (success) {
       setSelected(true);
