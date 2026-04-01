@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../providers/CartProvider";
 
 type Variant = {
@@ -21,16 +21,17 @@ type Product = {
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, items, removeItem } = useCart();
-  const [selectedMessage, setSelectedMessage] = useState("");
+  const [selected, setSelected] = useState(false);
+  const [animateCard, setAnimateCard] = useState(false);
 
   const firstSize =
-    product.variants && product.variants.length > 0
-      ? product.variants[0].sizeGb
-      : product.sizeGb ?? null;
+  product.variants && product.variants.length > 0
+    ? product.variants[0].sizeGb
+    : product.sizeGb ?? product.price ?? null;
 
   const isInCart = items.some((item) => item.productId === product.id);
 
-  const handleAdd = () => {
+  const handleAddToCart = () => {
     const success = addItem({
       productId: product.id,
       slug: product.slug,
@@ -38,61 +39,72 @@ export default function ProductCard({ product }: { product: Product }) {
       productImage: product.imageUrl || "",
       quantity: 1,
       sizeGb: firstSize ?? 0,
-      unitPrice: product.price ?? 0,
     });
 
     if (success) {
-      setSelectedMessage("تم الاختيار ✅");
-      setTimeout(() => setSelectedMessage(""), 2000);
+      setSelected(true);
+      setAnimateCard(true);
+
+      setTimeout(() => setSelected(false), 2000);
+      setTimeout(() => setAnimateCard(false), 350);
     }
   };
 
   return (
-    <div className="max-w-[220px] mx-auto overflow-hidden rounded-2xl border border-white/10 bg-slate-800 shadow-md">
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-700">
+    <div
+      className={`card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/60 backdrop-blur border border-white/10 shadow-xl hover:scale-[1.02] transition`}
+    >
+      <div className="relative overflow-hidden rounded-2xl">
         {isInCart && (
           <button
             onClick={() => removeItem(product.id)}
-            className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow hover:bg-red-700"
+            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow hover:bg-red-700"
           >
             ×
           </button>
         )}
 
-        <img
-          src={product.imageUrl || "/placeholder.jpg"}
-          alt={product.name}
-          className="h-full w-full object-cover"
-        />
+        {firstSize !== null && (
+  <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
+    {firstSize} GB
+  </div>
+)}
 
-        {firstSize ? (
-          <div className="absolute left-2 top-2 rounded-full bg-cyan-400 px-2 py-1 text-xs font-bold text-slate-900 shadow">
-            {firstSize} GB
-          </div>
-        ) : null}
+        <div className="h-80 w-full bg-slate-900 md:h-96">
+  <img
+    src={product.imageUrl || "/placeholder.jpg"}
+    alt={product.name}
+    className="h-full w-full object-cover transition duration-500 hover:scale-110"
+  />
+</div>
       </div>
 
-      <div className="space-y-2 p-3 text-center">
-        <h3 className="text-sm font-bold text-white line-clamp-2">
+      <div className="space-y-3 px-2 pb-2 pt-4 text-center">
+        <h3 className="text-xl font-black text-white line-clamp-1">
           {product.name}
         </h3>
 
-        {selectedMessage ? (
-          <div className="rounded-xl bg-slate-700 px-2 py-2 text-xs font-semibold text-cyan-300">
-            {selectedMessage}
-          </div>
-        ) : null}
+        {selected && (
+          <p className="fade-up text-sm font-bold text-green-400">
+            تم الاختيار ✅
+          </p>
+        )}
 
-        <div className="grid grid-cols-1 gap-2">
-          {!isInCart && (
-            <button
-              onClick={handleAdd}
-              className="rounded-xl bg-cyan-400 px-2 py-2 text-xs font-semibold text-slate-900 transition hover:bg-cyan-300"
-            >
-              أضف للسلة
-            </button>
-          )}
-        </div>
+        {!isInCart ? (
+          <button
+            onClick={handleAddToCart}
+            className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-600 to-cyan-500 py-3 text-base font-black text-white transition hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)]"
+          >
+            أضف للسلة
+          </button>
+        ) : (
+          <button
+            onClick={() => removeItem(product.id)}
+            className="w-full rounded-2xl border border-red-500/40 bg-red-500/10 py-3 text-base font-black text-red-300 transition hover:bg-red-500/20"
+          >
+            إزالة من السلة ❌
+          </button>
+        )}
       </div>
     </div>
   );

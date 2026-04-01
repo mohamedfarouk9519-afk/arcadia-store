@@ -1,17 +1,23 @@
+
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { isAdminAuthenticated } from "@/lib/api-auth";
+import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+
+async function isAdminAuthenticated() {
+  const cookieStore = await cookies();
+  return cookieStore.get("admin_auth")?.value === "true";
+} 
 
 export async function GET(req: Request, context: any) {
   try {
-    const id = context.params.id;
+    const { id } = await context.params;
 
     const product = await prisma.product.findUnique({
       where: { id },
     });
 
     if (!product) {
-      return NextResponse.json({ error: "المنتج غير موجود" }, { status: 404 });
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
     return NextResponse.json(product);
@@ -27,52 +33,26 @@ export async function PUT(req: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = context.params.id;
+    const { id } = await context.params;
     const body = await req.json();
 
     const product = await prisma.product.update({
       where: { id },
       data: {
         ...(body.name !== undefined && { name: body.name }),
-        ...(body.slug !== undefined && { slug: body.slug }),
-        ...(body.shortDescription !== undefined && {
-          shortDescription: body.shortDescription || "",
-        }),
-        ...(body.description !== undefined && {
-          description: body.description || "",
-        }),
-        ...(body.imageUrl !== undefined && {
-          imageUrl: body.imageUrl || "",
-        }),
+        ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl || "" }),
+        ...(body.categoryId !== undefined && { categoryId: body.categoryId }),
+        ...(body.isActive !== undefined && { isActive: body.isActive }),
+
         ...(body.price !== undefined && {
           price: Number(body.price),
         }),
-        ...(body.oldPrice !== undefined && {
-          oldPrice:
-            body.oldPrice === null || body.oldPrice === ""
-              ? null
-              : Number(body.oldPrice),
-        }),
+
         ...(body.sizeGb !== undefined && {
           sizeGb:
             body.sizeGb === null || body.sizeGb === ""
               ? null
               : Number(body.sizeGb),
-        }),
-        ...(body.categoryId !== undefined && {
-          categoryId: body.categoryId,
-        }),
-        ...(body.isFeatured !== undefined && {
-          isFeatured: body.isFeatured,
-        }),
-        ...(body.isActive !== undefined && {
-          isActive: body.isActive,
-        }),
-        ...(body.stockStatus !== undefined && {
-          stockStatus: body.stockStatus,
-        }),
-        ...(body.sortOrder !== undefined && {
-          sortOrder: Number(body.sortOrder),
         }),
       },
     });
@@ -80,7 +60,10 @@ export async function PUT(req: Request, context: any) {
     return NextResponse.json(product);
   } catch (error) {
     console.log("PUT PRODUCT ERROR:", error);
-    return NextResponse.json({ error: "حصل خطأ" }, { status: 500 });
+    return NextResponse.json(
+      { error: String(error) },
+      { status: 500 }
+    );
   }
 }
 
@@ -90,7 +73,7 @@ export async function DELETE(req: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = context.params.id;
+    const { id } = await context.params;
 
     await prisma.$transaction([
       prisma.orderItem.deleteMany({

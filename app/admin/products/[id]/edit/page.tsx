@@ -1,67 +1,97 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-export default function EditProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+type Category = {
+  id: string;
+  name: string;
+};
+
+export default function EditProductPage() {
   const router = useRouter();
-  const { id } = use(params);
+  const params = useParams();
+  const id = params.id as string;
+
+console.log("ID:", id);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [isActive, setIsActive] = useState(true);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setName(data.name || "");
-        setPrice(String(data.price || ""));
-        setImageUrl(data.imageUrl || "");
-        setCategoryId(data.categoryId || "");
-        setIsActive(Boolean(data.isActive));
-      });
+  if (!id) return;
 
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((data) => setCategories(data));
-  }, [id]);
+  fetch(`/api/products/${id}`)
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch product");
+      return res.json();
+    })
+    .then((data) => {
+      setName(data.name || "");
+      setPrice(String(data.sizeGb ?? ""));
+      setImageUrl(data.imageUrl || "");
+      setCategoryId(data.categoryId || "");
+      setIsActive(Boolean(data.isActive));
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("فشل تحميل بيانات المنتج");
+    });
 
-  async function handleSubmit(e: React.FormEvent) {
+  fetch("/api/categories")
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch categories");
+      return res.json();
+    })
+    .then((data) => {
+      setCategories(Array.isArray(data) ? data : []);
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("فشل تحميل الأقسام");
+    });
+}, [id]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch(`/api/products/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        price: Number(price),
-        imageUrl,
-        categoryId,
-        isActive,
-      }),
-    });
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+  name,
+  sizeGb: Number(price),
+  imageUrl,
+  categoryId,
+  isActive,
+}),
+});
 
-    setLoading(false);
+      if (res.ok) {
+        alert("تم التعديل ✅");
+        router.push("/admin/products");
+        return;
+      }
 
-    if (res.ok) {
-      router.push("/admin/products");
-      router.refresh();
-    } else {
-      alert("فشل تعديل المنتج");
+      const errorText = await res.text();
+      console.error(errorText);
+      alert("فشل تعديل المنتج ❌");
+    } catch (error) {
+      console.error(error);
+      alert("حدث خطأ أثناء الحفظ ❌");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen bg-slate-100 p-8" dir="rtl">
@@ -79,7 +109,7 @@ export default function EditProductPage({
           <input
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="السعر"
+            placeholder="جيجات اللعبة (GB)"
             className="w-full rounded-xl border p-3 text-black"
           />
 
@@ -95,6 +125,7 @@ export default function EditProductPage({
             onChange={(e) => setCategoryId(e.target.value)}
             className="w-full rounded-xl border p-3 text-black"
           >
+            <option value="">اختر القسم</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -114,7 +145,7 @@ export default function EditProductPage({
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-green-600 p-3 text-white"
+            className="w-full rounded-xl bg-green-600 p-3 text-white disabled:opacity-60"
           >
             {loading ? "جاري الحفظ..." : "حفظ التعديلات"}
           </button>
