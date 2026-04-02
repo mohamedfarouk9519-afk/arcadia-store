@@ -71,11 +71,11 @@ export default function ProductCard({ product }: { product: Product }) {
   </div>
 )}
 
-        <div className="h-80 w-full bg-slate-900 md:h-96">
+        <div className="w-full">
   <img
     src={product.imageUrl || "/placeholder.jpg"}
     alt={product.name}
-    className="h-full w-full object-cover transition duration-500 hover:scale-110"
+    className="w-full h-auto rounded-xl"
   />
 </div>
       </div>
