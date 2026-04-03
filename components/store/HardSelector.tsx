@@ -6,20 +6,20 @@ export default function HardSelector() {
   const { capacityGb, setCapacityGb, usedGb, remainingGb, progressPercent } = useCart();
 
   const hardOptions = [
-<option value={0}>غير محدود</option>
-    { label: "100 GB", value: 100 },
-    { label: "500 GB", value: 500 },
-    { label: "1 TB", value: 1000 },
-    { label: "2 TB", value: 2000 },
-    { label: "3 TB", value: 3000 },
-    { label: "4 TB", value: 4000 },
-    { label: "5 TB", value: 5000 },
-    { label: "6 TB", value: 6000 },
-    { label: "7 TB", value: 7000 },
-    { label: "8 TB", value: 8000 },
-    { label: "9 TB", value: 9000 },
-    { label: "10 TB", value: 10000 },
-  ];
+  { label: "غير محدود", value: 0 }, // ✅ الصح
+  { label: "100 GB", value: 100 },
+  { label: "500 GB", value: 500 },
+  { label: "1 TB", value: 1000 },
+  { label: "2 TB", value: 2000 },
+  { label: "3 TB", value: 3000 },
+  { label: "4 TB", value: 4000 },
+  { label: "5 TB", value: 5000 },
+  { label: "6 TB", value: 6000 },
+  { label: "7 TB", value: 7000 },
+  { label: "8 TB", value: 8000 },
+  { label: "9 TB", value: 9000 },
+  { label: "10 TB", value: 10000 },
+];
 
   return (
     <div className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-4">
