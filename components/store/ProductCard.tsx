@@ -27,7 +27,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const firstSize =
   product.variants && product.variants.length > 0
     ? product.variants[0].sizeGb
-    : product.sizeGb ?? product.price ?? null;
+    : product.sizeGb ?? 0; 
 
   const isInCart = items.some((item) => item.productId === product.id);
 
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
   productName: product.name,
   productImage: product.imageUrl || "",
   quantity: 1,
-  sizeGb: firstSize ?? 0,
+  sizeGb: firstSize || 0,
   unitPrice: product.price ?? 0, //
 });
 
@@ -64,10 +64,10 @@ export default function ProductCard({ product }: { product: Product }) {
       )}
 
       {firstSize !== null && (
-        <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
-          {firstSize} GB
-        </div>
-      )}
+  <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
+    {firstSize > 0 ? ${firstSize} GB : "غير محدد"}
+  </div>
+)}
 
       <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
         <img
