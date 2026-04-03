@@ -66,8 +66,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const total = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.quantity, 0);
-  }, [items]);
+  return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+}, [items]);
 
   const remainingGb = Math.max(capacityGb - usedGb, 0);
 
