@@ -52,7 +52,6 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-  <div
     <div className="card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl md:hover:scale-[1.02] md:transition-transform md:duration-150">
     <div className="relative overflow-hidden rounded-2xl">
       {isInCart && (
