@@ -79,38 +79,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [usedGb, capacityGb]);
 
   const setCapacityGb = (value: number) => {
-    setItems([]);
-    setCapacityGbState(value);
-  };
+  setItems([]);
+  setCapacityGbState(value);
+};
 
 const getHardPrice = (sizeGb: number) => {
   switch (sizeGb) {
-    case 100:
-      return 50;
-    case 500:
-      return 150;
-    case 1000:
-      return 250;
-    case 2000:
-      return 400;
-    case 3000:
-      return 550;
-    case 4000:
-      return 700;
-    case 5000:
-      return 850;
-    case 6000:
-      return 1000;
-    case 7000:
-      return 1200;
-    case 8000:
-      return 1400;
-    case 9000:
-      return 1600;
-    case 10000:
-      return 1800;
-    default:
-      return null;
+    case 100: return 50;
+    case 500: return 150;
+    case 1000: return 250;
+    case 2000: return 400;
+    case 3000: return 550;
+    case 4000: return 700;
+    case 5000: return 850;
+    case 6000: return 1000;
+    case 7000: return 1200;
+    case 8000: return 1400;
+    case 9000: return 1600;
+    case 10000: return 1800;
+    default: return null;
   }
 };
 
