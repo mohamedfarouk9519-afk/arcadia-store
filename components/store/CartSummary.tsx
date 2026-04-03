@@ -51,7 +51,7 @@ export default function CartSummary() {
               </div>
               <div className="text-sm text-slate-300">{item.sizeGb} GB</div>
               <div className="text-sm text-slate-400">
-                {formatPrice(item.unitPrice)} × {item.quantity}
+                {formatPrice(item.unitPrice * item.quantity)}
               </div>
             </div>
           </div>
