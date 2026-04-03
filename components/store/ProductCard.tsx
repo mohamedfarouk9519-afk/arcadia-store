@@ -71,12 +71,11 @@ export default function ProductCard({ product }: { product: Product }) {
   </div>
 )}
 
-        <div className="w-full">
+        <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
   <img
-    src={product.imageUrl || "/placeholder.jpg"}
-    alt={product.name}
-    className="w-full h-auto rounded-xl"
-  />
+  src={product.imageUrl || "/placeholder.jpg"}
+  className="w-full h-full object-cover"
+/>
 </div>
       </div>
 
