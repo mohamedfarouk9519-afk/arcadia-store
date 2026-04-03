@@ -35,7 +35,7 @@ const CAPACITY_STORAGE_KEY = "hard-cart-capacity";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [capacityGb, setCapacityGbState] = useState<number>(100);
+  const [capacityGb, setCapacityGbState] = useState<number>(0);
 
   useEffect(() => {
     const savedItems = localStorage.getItem(CART_STORAGE_KEY);
@@ -112,9 +112,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const requiredGb = normalizedItem.sizeGb * normalizedItem.quantity;
 
-  if (usedGb + requiredGb > capacityGb) {
-    return false;
-  }
+  if (capacityGb > 0 && usedGb + requiredGb > capacityGb) {
+  return false;
+}
 
   setItems((prev) => [...prev, normalizedItem]);
   return true;
