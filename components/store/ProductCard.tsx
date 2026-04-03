@@ -38,7 +38,10 @@ export default function ProductCard({ product }: { product: Product }) {
     productName: product.name,
     productImage: product.imageUrl || "/placeholder.jpg",
     quantity: 1,
+
+    // 👇 أهم سطر
     sizeGb: firstSize ?? product.sizeGb ?? 1,
+
     unitPrice: product.price ?? 0,
   });
 
