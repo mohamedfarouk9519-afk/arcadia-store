@@ -65,7 +65,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {firstSize !== null && (
   <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
-    {firstSize > 0 ? ${firstSize} GB : "غير محدد"}
+    {firstSize > 0 ? `${firstSize} GB` : "غير محدد"}
   </div>
 )}
 
