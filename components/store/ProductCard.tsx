@@ -27,29 +27,29 @@ export default function ProductCard({ product }: { product: Product }) {
   const firstSize =
   product.variants && product.variants.length > 0
     ? product.variants[0].sizeGb
-    : product.sizeGb ?? 0; 
+    : product.sizeGb ?? 1; 
 
   const isInCart = items.some((item) => item.productId === product.id);
 
   const handleAddToCart = () => {
-    const success = addItem({
-  productId: product.id,
-  slug: product.slug,
-  productName: product.name,
-  productImage: product.imageUrl || "",
-  quantity: 1,
-  sizeGb: firstSize ?? 1,
-  unitPrice: product.price ?? 0, //
-});
+  const success = addItem({
+    productId: product.id,
+    slug: product.slug,
+    productName: product.name,
+    productImage: product.imageUrl || "/placeholder.jpg",
+    quantity: 1,
+    sizeGb: firstSize ?? product.sizeGb ?? 1,
+    unitPrice: product.price ?? 0,
+  });
 
-    if (success) {
-      setSelected(true);
-      setAnimateCard(true);
+  if (success) {
+    setSelected(true);
+    setAnimateCard(true);
 
-      setTimeout(() => setSelected(false), 2000);
-      setTimeout(() => setAnimateCard(false), 350);
-    }
-  };
+    setTimeout(() => setSelected(false), 2000);
+    setTimeout(() => setAnimateCard(false), 350);
+  }
+};
 
   return (
     <div className="card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl md:hover:scale-[1.02] md:transition-transform md:duration-150">
