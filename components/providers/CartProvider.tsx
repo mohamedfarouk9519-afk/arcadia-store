@@ -84,40 +84,60 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addItem = (item: CartItem) => {
-    const exists = items.find(
-      (x) => x.productId === item.productId && x.sizeGb === item.sizeGb
-    );
-
-    if (exists) {
-      return false;
-    }
-
-    const requiredGb = item.sizeGb * item.quantity;
-
-    if (usedGb + requiredGb > capacityGb) {
-      return false;
-    }
-
-    setItems((prev) => [...prev, item]);
-    return true;
+  const normalizedItem = {
+    ...item,
+    sizeGb: item.sizeGb > 0 ? item.sizeGb : 1,
+    quantity: item.quantity > 0 ? item.quantity : 1,
+    unitPrice: item.unitPrice >= 0 ? item.unitPrice : 0,
+    productImage: item.productImage || "/placeholder.jpg",
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(productId);
-      return;
-    }
+  const existingIndex = items.findIndex(
+    (x) =>
+      x.productId === normalizedItem.productId &&
+      x.sizeGb === normalizedItem.sizeGb
+  );
 
+  if (existingIndex !== -1) {
+    // 🔥 زوّد الكمية بدل ما ترفض
     setItems((prev) =>
-      prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
+      prev.map((item, index) =>
+        index === existingIndex
+          ? { ...item, quantity: item.quantity + normalizedItem.quantity }
+          : item
       )
     );
-  };
+    return true;
+  }
+
+  const requiredGb = normalizedItem.sizeGb * normalizedItem.quantity;
+
+  if (usedGb + requiredGb > capacityGb) {
+    return false;
+  }
+
+  setItems((prev) => [...prev, normalizedItem]);
+  return true;
+};
+
 
   const removeItem = (productId: string) => {
     setItems((prev) => prev.filter((item) => item.productId !== productId));
   };
+
+const updateQuantity = (productId: string, quantity: number) => {
+  if (quantity <= 0) {
+    removeItem(productId);
+    return;
+  }
+
+  setItems((prev) =>
+    prev.map((item) =>
+      item.productId === productId ? { ...item, quantity } : item
+    )
+  );
+};
+
 
   const clearCart = () => {
     setItems([]);
