@@ -6,6 +6,7 @@ export default function HardSelector() {
   const { capacityGb, setCapacityGb, usedGb, remainingGb, progressPercent } = useCart();
 
   const hardOptions = [
+<option value={0}>غير محدود</option>
     { label: "100 GB", value: 100 },
     { label: "500 GB", value: 500 },
     { label: "1 TB", value: 1000 },
