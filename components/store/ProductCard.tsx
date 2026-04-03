@@ -53,7 +53,9 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div
-      className={`card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/60 backdrop-blur border border-white/10 shadow-xl hover:scale-[1.02] transition`}
+      className={`card-anime overflow-hidden rounded-3xl p-2
+bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl
+md:hover:scale-[1.02] md:transition-transform md:duration-150`
     >
       <div className="relative overflow-hidden rounded-2xl">
         {isInCart && (
@@ -93,14 +95,14 @@ export default function ProductCard({ product }: { product: Product }) {
         {!isInCart ? (
           <button
             onClick={handleAddToCart}
-            className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-600 to-cyan-500 py-3 text-base font-black text-white transition hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)]"
+            className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-600 to-cyan-500 py-3 text-base font-black text-white md:transition-transform md:hover:scale-[1.02] md:hover:shadow-[0_0_20px_rgba(168,85,247,0.6)]"
           >
             أضف للسلة
           </button>
         ) : (
           <button
             onClick={() => removeItem(product.id)}
-            className="w-full rounded-2xl border border-red-500/40 bg-red-500/10 py-3 text-base font-black text-red-300 transition hover:bg-red-500/20"
+            className="w-full rounded-2xl border border-red-500/40 bg-red-500/10 py-3 text-base font-black text-red-300 md:transition-colors md:hover:bg-red-500/20"
           >
             إزالة من السلة ❌
           </button>
