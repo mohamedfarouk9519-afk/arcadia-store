@@ -38,7 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
   productName: product.name,
   productImage: product.imageUrl || "",
   quantity: 1,
-  sizeGb: firstSize || 0,
+  sizeGb: firstSize ?? 1,
   unitPrice: product.price ?? 0, //
 });
 
