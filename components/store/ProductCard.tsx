@@ -20,7 +20,7 @@ type Product = {
 };
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { addItem, items, removeItem } = useCart();
+  const { addItem, items, removeItem, capacityGb } = useCart();
   const [selected, setSelected] = useState(false);
   const [animateCard, setAnimateCard] = useState(false);
 
@@ -38,10 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
     productName: product.name,
     productImage: product.imageUrl || "/placeholder.jpg",
     quantity: 1,
-
-    // 👇 أهم سطر
-    sizeGb: firstSize ?? product.sizeGb ?? 1,
-
+    sizeGb: capacityGb > 0 ? capacityGb : firstSize ?? product.sizeGb ?? 0,
     unitPrice: product.price ?? 0,
   });
 
@@ -52,7 +49,7 @@ export default function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setSelected(false), 2000);
     setTimeout(() => setAnimateCard(false), 350);
   }
-};
+}
 
   return (
     <div className="card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl md:hover:scale-[1.02] md:transition-transform md:duration-150">
