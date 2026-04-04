@@ -31,6 +31,37 @@ const CartContext = createContext<CartContextType | null>(null);
 const CART_STORAGE_KEY = "hard-cart-items";
 const CAPACITY_STORAGE_KEY = "hard-cart-capacity";
 
+const getHardPrice = (sizeGb: number) => {
+  switch (sizeGb) {
+    case 100:
+      return 50;
+    case 500:
+      return 150;
+    case 1000:
+      return 250;
+    case 2000:
+      return 400;
+    case 3000:
+      return 550;
+    case 4000:
+      return 700;
+    case 5000:
+      return 850;
+    case 6000:
+      return 1000;
+    case 7000:
+      return 1200;
+    case 8000:
+      return 1400;
+    case 9000:
+      return 1600;
+    case 10000:
+      return 1800;
+    default:
+      return null;
+  }
+};
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [capacityGb, setCapacityGbState] = useState<number>(0);
@@ -65,6 +96,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((sum, item) => sum + item.sizeGb * item.quantity, 0);
   }, [items]);
 
+  const total = useMemo(() => {
+    const hardPrice = getHardPrice(capacityGb);
+    if (hardPrice !== null) return hardPrice;
+
+    return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  }, [items, capacityGb]);
 
   const remainingGb = Math.max(capacityGb - usedGb, 0);
 
@@ -74,87 +111,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [usedGb, capacityGb]);
 
   const setCapacityGb = (value: number) => {
-  setCapacityGbState(value);
-};
-
-  const getHardPrice = (sizeGb: number) => {
-  switch (sizeGb) {
-    case 100:
-      return 50;
-    case 500:
-      return 150;
-    case 1000:
-      return 250;
-    case 2000:
-      return 400;
-    case 3000:
-      return 550;
-    case 4000:
-      return 700;
-    case 5000:
-      return 850;
-    case 6000:
-      return 1000;
-    case 7000:
-      return 1200;
-    case 8000:
-      return 1400;
-    case 9000:
-      return 1600;
-    case 10000:
-      return 1800;
-    default:
-      return null;
-  }
-};
-
-const total = useMemo(() => {
-  const hardPrice = getHardPrice(capacityGb);
-  if (hardPrice !== null) return hardPrice;
-
-  return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-}, [items, capacityGb]);
-
-  const addItem = (item: CartItem) => {
-  const normalizedItem = {
-    ...item,
-    sizeGb: item.sizeGb > 0 ? item.sizeGb : 0,
-    quantity: item.quantity > 0 ? item.quantity : 1,
-    productImage: item.productImage || "/placeholder.jpg",
+    setCapacityGbState(value);
   };
 
   const addItem = (item: CartItem) => {
-  const normalizedItem = {
-    ...item,
-    sizeGb: item.sizeGb > 0 ? item.sizeGb : 0,
-    quantity: item.quantity > 0 ? item.quantity : 1,
-    productImage: item.productImage || "/placeholder.jpg",
-  };
+    const normalizedItem = {
+      ...item,
+      sizeGb: item.sizeGb > 0 ? item.sizeGb : 0,
+      quantity: item.quantity > 0 ? item.quantity : 1,
+      productImage: item.productImage || "/placeholder.jpg",
+    };
 
-  const exists = items.find(
-    (x) => x.productId === normalizedItem.productId
-  );
+    const exists = items.find((x) => x.productId === normalizedItem.productId);
 
-  if (exists) {
-    setItems((prev) =>
-      prev.map((x) =>
-        x.productId === normalizedItem.productId
-          ? { ...x, quantity: x.quantity + normalizedItem.quantity }
-          : x
-      )
-    );
+    if (exists) {
+      setItems((prev) =>
+        prev.map((x) =>
+          x.productId === normalizedItem.productId
+            ? { ...x, quantity: x.quantity + normalizedItem.quantity }
+            : x
+        )
+      );
+      return true;
+    }
+
+    const requiredGb = normalizedItem.sizeGb * normalizedItem.quantity;
+
+    if (capacityGb > 0 && usedGb + requiredGb > capacityGb) {
+      return false;
+    }
+
+    setItems((prev) => [...prev, normalizedItem]);
     return true;
-  }
-
-  const requiredGb = normalizedItem.sizeGb * normalizedItem.quantity;
-
-  if (capacityGb > 0 && usedGb + requiredGb > capacityGb) {
-    return false;
-  }
-
-  setItems((prev) => [...prev, normalizedItem]);
-  return true;
-};
+  };
 
   const removeItem = (productId: string) => {
     setItems((prev) => prev.filter((item) => item.productId !== productId));
