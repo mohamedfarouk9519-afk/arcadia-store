@@ -77,9 +77,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [usedGb, capacityGb]);
 
   const setCapacityGb = (value: number) => {
-    setItems([]);
-    setCapacityGbState(value);
-  };
+  setCapacityGbState(value);
+};
 
   const getHardPrice = (sizeGb: number) => {
   switch (sizeGb) {
@@ -121,11 +120,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hardPrice = getHardPrice(normalizedItem.sizeGb);
-
-  // لو اختار سعة محددة من 100 لحد 10 تيرا -> ياخد السعر المعدل
-  // لو غير محدود (0) -> ياخد السعر العادي
-  normalizedItem.unitPrice =
-    hardPrice !== null ? hardPrice : normalizedItem.unitPrice;
+normalizedItem.unitPrice =
+  hardPrice !== null ? hardPrice : normalizedItem.unitPrice;
 
   const exists = items.find(
     (x) =>

@@ -5,7 +5,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import { formatPrice } from "@/lib/utils";
 
 export default function CartSummary() {
-  const { items, total, updateQuantity, removeItem, clearCart } = useCart();
+  const { items, total, removeItem, clearCart } = useCart();
 
   if (items.length === 0) {
     return (
@@ -32,47 +32,31 @@ export default function CartSummary() {
             <div className="relative">
               <button
                 onClick={() => removeItem(item.productId)}
-                className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow transition hover:bg-red-700"
-                title="حذف المنتج"
+                className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-white"
               >
                 ×
               </button>
 
               <img
-                src={item.productImage || "https://placehold.co/160x120?text=Item"}
+                src={item.productImage}
                 alt={item.productName}
-                className="h-24 w-32 rounded-2xl object-cover"
+                className="h-20 w-20 rounded-lg object-cover"
               />
             </div>
 
             <div>
-              <div className="text-lg font-bold text-white">
-                {item.productName}
+              <div className="font-bold text-white">{item.productName}</div>
+
+              <div className="text-sm text-slate-300">
+                {item.sizeGb >= 1000
+                  ? `${item.sizeGb / 1000} TB`
+                  : `${item.sizeGb} GB`}
               </div>
-              <div className="text-sm text-slate-300">{item.sizeGb} GB</div>
-              <div className="text-sm text-slate-400">
-                {formatPrice(item.unitPrice)} × {item.quantity}
+
+              <div className="text-sm font-bold text-white">
+                {formatPrice(item.unitPrice * item.quantity)}
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <input
-              type="number"
-              min={1}
-              value={item.quantity}
-              onChange={(e) =>
-                updateQuantity(item.productId, Number(e.target.value))
-              }
-              className="input w-24"
-            />
-
-            <button
-              onClick={() => removeItem(item.productId)}
-              className="btn-secondary"
-            >
-              حذف
-            </button>
           </div>
         </div>
       ))}
@@ -80,7 +64,7 @@ export default function CartSummary() {
       <div className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="text-sm text-slate-400">الإجمالي النهائي</div>
-          <div className="text-3xl font-black text-cyan-300">
+          <div className="text-2xl font-black text-white">
             {formatPrice(total)}
           </div>
         </div>
