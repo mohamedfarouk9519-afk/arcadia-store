@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useCart } from "@/components/providers/CartProvider";
 
 export default function CheckoutClient({
@@ -8,40 +7,26 @@ export default function CheckoutClient({
 }: {
   whatsappNumber: string;
 }) {
-  const { items, total, clearCart } = useCart();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const { items, total } = useCart();
 
-  const whatsappNumber = "201114330664";
+  const fixedWhatsappNumber = "201114330664";
 
-const message = `
+  const message = `
 طلب جديد من Arcadia Store 🕹️
 
 ${items
-  .map((item, index) => {
-    return `${index + 1}- ${item.productName} (${item.sizeGb} GB) - الكمية: ${item.quantity}`;
-  })
+  .map(
+    (item, index) =>
+      `${index + 1}- ${item.productName} (${item.sizeGb} GB) - الكمية: ${item.quantity}`
+  )
   .join("\n")}
 
 ------------------------
 الإجمالي: ${total} ج.م
 `;
 
-const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-${items
-  .map(
-    (item, index) =>
-      `${index + 1}- ${item.productName} - ${item.sizeGb} GB - الكمية: ${item.quantity}`
-  )
-  .join("\n")}
-
---------------------
-الإجمالي: ${total} ج.م
-`;
-
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    whatsappText
+  const whatsappUrl = `https://wa.me/${fixedWhatsappNumber}?text=${encodeURIComponent(
+    message
   )}`;
 
   return (
@@ -64,9 +49,7 @@ ${items
               </div>
             </div>
 
-            <div className="font-bold text-cyan-300">
-              {item.sizeGb} GB
-            </div>
+            <div className="font-bold text-cyan-300">{item.sizeGb} GB</div>
           </div>
         ))}
 
@@ -79,12 +62,13 @@ ${items
         <h2 className="text-2xl font-black">إرسال الطلب</h2>
 
         <a
-  href={whatsappUrl}
-  target="_blank"
-  className="btn-primary block text-center"
->
-  إرسال الطلب عبر واتساب
-</a>
+          href={whatsappUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-primary block text-center"
+        >
+          إرسال الطلب عبر واتساب
+        </a>
       </div>
     </div>
   );
