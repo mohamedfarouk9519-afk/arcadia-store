@@ -18,6 +18,7 @@ console.log("ID:", id);
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
+const [sizeGb, setSizeGb] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,11 +32,12 @@ console.log("ID:", id);
       return res.json();
     })
     .then((data) => {
-      setName(data.name || "");
-      setImageUrl(data.imageUrl || "");
-      setCategoryId(data.categoryId || "");
-      setIsActive(Boolean(data.isActive));
-    })
+  setName(data.name || "");
+  setSizeGb(String(data.sizeGb ?? ""));
+  setImageUrl(data.imageUrl || "");
+  setCategoryId(data.categoryId || "");
+  setIsActive(Boolean(data.isActive));
+});
     .catch((error) => {
       console.error(error);
       alert("فشل تحميل بيانات المنتج");
@@ -111,6 +113,13 @@ console.log("ID:", id);
             placeholder="رابط الصورة"
             className="w-full rounded-xl border p-3 text-black"
           />
+
+<input
+  value={sizeGb}
+  onChange={(e) => setSizeGb(e.target.value)}
+  placeholder="حجم اللعبة بالجيجا"
+  className="w-full rounded-xl border p-3 text-black"
+/>
 
           <select
             value={categoryId}
