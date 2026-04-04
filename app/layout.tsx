@@ -5,7 +5,7 @@ import { CartProvider } from "@/components/providers/CartProvider";
 import BackButton from "@/components/BackButton";
 
 export const metadata = {
-  title: "Store Launch Ready",
+  title: "Arcadia Store 🕹️",
   description: "متجر احترافي",
 };
 

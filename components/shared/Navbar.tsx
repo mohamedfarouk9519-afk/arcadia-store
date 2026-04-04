@@ -53,7 +53,7 @@ export default function Navbar() {
             onClick={handleSecretClick}
             className="glow text-xl font-black tracking-tight text-white md:text-2xl"
           >
-            Store Launch Ready
+            Arcadia Store 🕹️
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm md:flex">
