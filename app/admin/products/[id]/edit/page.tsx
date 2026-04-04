@@ -69,10 +69,10 @@ const [sizeGb, setSizeGb] = useState("");
   },
   body: JSON.stringify({
   name,
-  sizeGb: 0,
   imageUrl,
   categoryId,
   isActive,
+  sizeGb: sizeGb === "" ? null : Number(sizeGb),
 }),
 });
 
