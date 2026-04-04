@@ -17,3 +17,20 @@
   transform: scale(1.03);
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}
