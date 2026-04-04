@@ -97,11 +97,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const total = useMemo(() => {
-    const hardPrice = getHardPrice(capacityGb);
-    if (hardPrice !== null) return hardPrice;
+  const hardPrice = getHardPrice(capacityGb);
 
-    return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-  }, [items, capacityGb]);
+  // لو اختار سعة ثابتة من القائمة
+  if (hardPrice !== null) return hardPrice;
+
+  // لو اختار "غير محدود"
+  // 100 جيجا = 60 جنيه => 1 جيجا = 0.6 جنيه
+  return Math.ceil(usedGb * 0.6);
+}, [usedGb, capacityGb]);
 
   const remainingGb = Math.max(capacityGb - usedGb, 0);
 
