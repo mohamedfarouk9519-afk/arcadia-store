@@ -29,8 +29,6 @@ export default function ProductCard({ product }: { product: Product }) {
       ? product.variants[0].sizeGb
       : product.sizeGb ?? 1;
 
-  const currentSize =
-    capacityGb > 0 ? capacityGb : firstSize ?? product.sizeGb ?? 0;
 
   const isInCart = items.some((item) => item.productId === product.id);
   
@@ -58,6 +56,25 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl md:hover:scale-[1.02] md:transition-transform md:duration-150">
       <div className="relative overflow-hidden rounded-2xl">
+<div className="relative overflow-hidden rounded-2xl">
+
+  {firstSize > 0 && (
+    <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
+      {firstSize >= 1000
+        ? `${firstSize / 1000} TB`
+        : `${firstSize} GB`}
+    </div>
+  )}
+
+  <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
+    <img
+      src={product.imageUrl || "/placeholder.jpg"}
+      alt={product.name}
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+</div>
         {isInCart && (
           <button
             onClick={() => removeItem(product.id)}
@@ -67,11 +84,11 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
         )}
 
-        {capacityGb > 0 && (
+        {firstSize > 0 && (
   <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
-    {capacityGb >= 1000
-      ? `${capacityGb / 1000} TB`
-      : `${capacityGb} GB`}
+    {firstSize >= 1000
+      ? `${firstSize / 1000} TB`
+      : `${firstSize} GB`}
   </div>
 )}
 
