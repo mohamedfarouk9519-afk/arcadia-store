@@ -1,15 +1,13 @@
-
 export const dynamic = "force-dynamic";
+
 import HardSelector from "@/components/store/HardSelector";
-import { useCart } from "@/components/providers/CartProvider";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-
 
 export default async function HomePage() {
   const categories = await prisma.category.findMany({
     where: { isActive: true },
-    orderBy: { sortOrder: "asc" },                                                                           
+    orderBy: { sortOrder: "asc" },
     include: {
       products: {
         where: { isActive: true },
@@ -21,9 +19,10 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-<HardSelector />
+      <HardSelector />
+
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <h1 className="mb-4 text-4xl font-bold">Store Launch Ready</h1>
+        <h1 className="mb-4 text-4xl font-bold">Arcadia Store 🕹️</h1>
         <p className="mb-10 text-white/70">
           أهلاً بيك، دي الصفحة الرئيسية للموقع.
         </p>
@@ -35,6 +34,7 @@ export default async function HomePage() {
               className="rounded-2xl border border-white/10 bg-white/5 p-6"
             >
               <h2 className="mb-2 text-2xl font-semibold">{category.name}</h2>
+
               <p className="mb-4 text-white/60">
                 {category.description || "No description"}
               </p>
@@ -46,8 +46,13 @@ export default async function HomePage() {
                     className="rounded-xl border border-white/10 bg-black/30 p-3"
                   >
                     <div className="font-medium">{product.name}</div>
+
                     <div className="text-sm text-white/60">
-                      
+                      {product.sizeGb
+                        ? product.sizeGb >= 1000
+                          ? `${product.sizeGb / 1000} TB`
+                          : `${product.sizeGb} GB`
+                        : ""}
                     </div>
                   </div>
                 ))}
