@@ -33,7 +33,7 @@ export default function ProductCard({ product }: { product: Product }) {
     capacityGb > 0 ? capacityGb : firstSize ?? product.sizeGb ?? 0;
 
   const isInCart = items.some((item) => item.productId === product.id);
-  );
+  
 
   const handleAddToCart = () => {
   const success = addItem({
