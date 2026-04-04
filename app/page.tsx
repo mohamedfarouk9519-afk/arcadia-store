@@ -5,6 +5,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+
 export default async function HomePage() {
   const categories = await prisma.category.findMany({
     where: { isActive: true },
