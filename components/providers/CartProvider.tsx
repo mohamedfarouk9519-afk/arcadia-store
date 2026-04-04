@@ -104,7 +104,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // لو اختار "غير محدود"
   // 100 جيجا = 60 جنيه => 1 جيجا = 0.6 جنيه
-  return Math.ceil(usedGb * 0.6);
+  return Math.ceil(usedGb * 0.5);
 }, [usedGb, capacityGb]);
 
   const remainingGb = Math.max(capacityGb - usedGb, 0);
