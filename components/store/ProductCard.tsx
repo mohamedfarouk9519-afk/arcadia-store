@@ -32,29 +32,28 @@ export default function ProductCard({ product }: { product: Product }) {
   const currentSize =
     capacityGb > 0 ? capacityGb : firstSize ?? product.sizeGb ?? 0;
 
-  const isInCart = items.some(
-    (item) => item.productId === product.id && item.sizeGb === currentSize
+  const isInCart = items.some((item) => item.productId === product.id);
   );
 
   const handleAddToCart = () => {
-    const success = addItem({
-      productId: product.id,
-      slug: product.slug,
-      productName: product.name,
-      productImage: product.imageUrl || "/placeholder.jpg",
-      quantity: 1,
-      sizeGb: currentSize,
-      unitPrice: product.price ?? 0,
-    });
+  const success = addItem({
+    productId: product.id,
+    slug: product.slug,
+    productName: product.name,
+    productImage: product.imageUrl || "/placeholder.jpg",
+    quantity: 1,
+    sizeGb: firstSize ?? product.sizeGb ?? 0,
+    unitPrice: product.price ?? 0,
+  });
 
-    if (success) {
-      setSelected(true);
-      setAnimateCard(true);
+  if (success) {
+    setSelected(true);
+    setAnimateCard(true);
 
-      setTimeout(() => setSelected(false), 2000);
-      setTimeout(() => setAnimateCard(false), 350);
-    }
-  };
+    setTimeout(() => setSelected(false), 2000);
+    setTimeout(() => setAnimateCard(false), 350);
+  }
+};
 
   return (
     <div className="card-anime overflow-hidden rounded-3xl p-2 bg-slate-900/90 md:backdrop-blur-md border border-white/10 shadow-xl md:hover:scale-[1.02] md:transition-transform md:duration-150">
@@ -68,13 +67,13 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
         )}
 
-        {currentSize > 0 && (
-          <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
-            {currentSize >= 1000
-              ? `${currentSize / 1000} TB`
-              : `${currentSize} GB`}
-          </div>
-        )}
+        {capacityGb > 0 && (
+  <div className="absolute left-3 top-3 z-10 rounded-full border border-cyan-400 bg-black/60 px-3 py-1 text-xs font-bold text-cyan-300 backdrop-blur shadow-lg">
+    {capacityGb >= 1000
+      ? `${capacityGb / 1000} TB`
+      : `${capacityGb} GB`}
+  </div>
+)}
 
         <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
           <img

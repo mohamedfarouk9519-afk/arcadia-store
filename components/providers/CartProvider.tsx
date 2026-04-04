@@ -65,9 +65,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((sum, item) => sum + item.sizeGb * item.quantity, 0);
   }, [items]);
 
-  const total = useMemo(() => {
-  return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-}, [items]);
 
   const remainingGb = Math.max(capacityGb - usedGb, 0);
 
@@ -111,6 +108,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 };
 
+const total = useMemo(() => {
+  const hardPrice = getHardPrice(capacityGb);
+  if (hardPrice !== null) return hardPrice;
+
+  return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+}, [items, capacityGb]);
+
   const addItem = (item: CartItem) => {
   const normalizedItem = {
     ...item,
@@ -119,21 +123,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     productImage: item.productImage || "/placeholder.jpg",
   };
 
-  const hardPrice = getHardPrice(normalizedItem.sizeGb);
-normalizedItem.unitPrice =
-  hardPrice !== null ? hardPrice : 0;
+  const addItem = (item: CartItem) => {
+  const normalizedItem = {
+    ...item,
+    sizeGb: item.sizeGb > 0 ? item.sizeGb : 0,
+    quantity: item.quantity > 0 ? item.quantity : 1,
+    productImage: item.productImage || "/placeholder.jpg",
+  };
 
   const exists = items.find(
-    (x) =>
-      x.productId === normalizedItem.productId &&
-      x.sizeGb === normalizedItem.sizeGb
+    (x) => x.productId === normalizedItem.productId
   );
 
   if (exists) {
     setItems((prev) =>
       prev.map((x) =>
-        x.productId === normalizedItem.productId &&
-        x.sizeGb === normalizedItem.sizeGb
+        x.productId === normalizedItem.productId
           ? { ...x, quantity: x.quantity + normalizedItem.quantity }
           : x
       )
