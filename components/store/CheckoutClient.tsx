@@ -15,22 +15,19 @@ export default function CheckoutClient({
   const whatsappNumber = "201114330664";
 
 const message = `
-طلب جديد من الموقع 🕹️
+طلب جديد من Arcadia Store 🕹️
 
 ${items
-  .map(
-    (item, index) =>
-      `${index + 1}- ${item.productName} (${item.sizeGb} GB)`
-  )
+  .map((item, index) => {
+    return `${index + 1}- ${item.productName} (${item.sizeGb} GB) - الكمية: ${item.quantity}`;
+  })
   .join("\n")}
 
 ------------------------
 الإجمالي: ${total} ج.م
 `;
 
-const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-  message
-)}`;
+const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 ${items
   .map(
