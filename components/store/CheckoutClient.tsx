@@ -12,8 +12,25 @@ export default function CheckoutClient({
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const whatsappText = `
-طلب جديد من Arcadia Store 🕹️
+  const whatsappNumber = "201114330664";
+
+const message = `
+طلب جديد من الموقع 🕹️
+
+${items
+  .map(
+    (item, index) =>
+      `${index + 1}- ${item.productName} (${item.sizeGb} GB)`
+  )
+  .join("\n")}
+
+------------------------
+الإجمالي: ${total} ج.م
+`;
+
+const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+  message
+)}`;
 
 ${items
   .map(
@@ -65,13 +82,12 @@ ${items
         <h2 className="text-2xl font-black">إرسال الطلب</h2>
 
         <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="btn-primary block text-center"
-        >
-          إرسال الطلب عبر واتساب
-        </a>
+  href={whatsappUrl}
+  target="_blank"
+  className="btn-primary block text-center"
+>
+  إرسال الطلب عبر واتساب
+</a>
       </div>
     </div>
   );
