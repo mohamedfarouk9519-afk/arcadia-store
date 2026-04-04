@@ -16,7 +16,6 @@ export default function EditProductPage() {
 console.log("ID:", id);
 
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [isActive, setIsActive] = useState(true);
@@ -33,7 +32,6 @@ console.log("ID:", id);
     })
     .then((data) => {
       setName(data.name || "");
-      setPrice(String(data.sizeGb ?? ""));
       setImageUrl(data.imageUrl || "");
       setCategoryId(data.categoryId || "");
       setIsActive(Boolean(data.isActive));
@@ -69,7 +67,7 @@ console.log("ID:", id);
   },
   body: JSON.stringify({
   name,
-  sizeGb: Number(price),
+  sizeGb: 0,
   imageUrl,
   categoryId,
   isActive,
@@ -106,12 +104,6 @@ console.log("ID:", id);
             className="w-full rounded-xl border p-3 text-black"
           />
 
-          <input
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="جيجات اللعبة (GB)"
-            className="w-full rounded-xl border p-3 text-black"
-          />
 
           <input
             value={imageUrl}

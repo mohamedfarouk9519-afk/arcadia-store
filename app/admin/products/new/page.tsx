@@ -7,7 +7,6 @@ export default function NewProductPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [variants, setVariants] = useState([{ sizeGb: "" }]);
@@ -42,7 +41,6 @@ export default function NewProductPage() {
         },
         body: JSON.stringify({
           name,
-          price: Number(price),
           imageUrl,
           categoryId,
           variants: cleanVariants,

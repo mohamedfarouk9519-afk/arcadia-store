@@ -121,7 +121,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const hardPrice = getHardPrice(normalizedItem.sizeGb);
 normalizedItem.unitPrice =
-  hardPrice !== null ? hardPrice : normalizedItem.unitPrice;
+  hardPrice !== null ? hardPrice : 0;
 
   const exists = items.find(
     (x) =>
