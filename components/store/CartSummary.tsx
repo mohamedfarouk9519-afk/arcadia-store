@@ -54,7 +54,7 @@ export default function CartSummary() {
               </div>
 
               <div className="text-sm font-bold text-white">
-                {formatPrice(item.unitPrice * item.quantity)}
+                
               </div>
             </div>
           </div>
