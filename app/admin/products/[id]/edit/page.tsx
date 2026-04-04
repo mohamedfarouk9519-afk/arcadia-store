@@ -37,11 +37,11 @@ const [sizeGb, setSizeGb] = useState("");
   setImageUrl(data.imageUrl || "");
   setCategoryId(data.categoryId || "");
   setIsActive(Boolean(data.isActive));
+})
+.catch((error) => {
+  console.error(error);
+  alert("فشل تحميل بيانات المنتج");
 });
-    .catch((error) => {
-      console.error(error);
-      alert("فشل تحميل بيانات المنتج");
-    });
 
   fetch("/api/categories")
     .then((res) => {
