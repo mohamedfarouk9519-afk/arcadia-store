@@ -9,7 +9,7 @@ export default async function CheckoutPage() {
         <h1 className="section-title">إتمام الطلب</h1>
         <p className="section-subtitle">الطلب يتسجل عندك في لوحة التحكم ثم يفتح واتساب برسالة جاهزة للمتابعة.</p>
       </div>
-      <CheckoutClient whatsappNumber={settings?.whatsappNumber || ""} />
+      <CheckoutClient whatsappNumber="201104334514" /> />
     </main>
   );
 }
