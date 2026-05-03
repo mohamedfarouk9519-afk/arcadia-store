@@ -9,7 +9,7 @@ export default function CheckoutClient({
 }) {
   const { items, total } = useCart();
 
-  const fixedWhatsappNumber = "201114330664";
+  const fixedWhatsappNumber = "201104334514";
 
   const message = `
 طلب جديد من Arcadia Store 🕹️
